@@ -1,0 +1,22 @@
+{
+  "name": "vue-todomvc",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build"
+  },
+  "dependencies": {
+    "todomvc-common": "^1.0.5",
+    "vue": "^3.0.2"
+  },
+  "devDependencies": {
+    "vite": "^1.0.0-rc.8",
+    "@vue/compiler-sfc": "^3.0.2"
+  },
+  "prettier": {
+    "printWidth": 80,
+    "trailingComma": "es5",
+    "semi": false,
+    "singleQuote": true
+  }
+}
