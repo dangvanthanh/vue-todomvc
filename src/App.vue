@@ -18,9 +18,27 @@
           <input type="checkbox" class="toggle-all" id="toggle-all" />
           <label for="toggle-all">Mark all as complete</label>
         </div>
-        <TodoList :todos="filteredTodos" />
+        <ul class="todo-list">
+          <li
+            class="todo"
+            v-for="todo in filteredTodos"
+            :key="todo.id"
+            :class="{ completed: todo.completed }"
+          >
+            <div class="view">
+              <input type="checkbox" class="toggle" v-model="todo.completed" />
+              <label @dblclick="editTodo(todo)">{{ todo.title }}</label>
+              <button
+                class="destroy"
+                @click.prevent="removeTodo(todo.id)"
+              ></button>
+            </div>
+            <input type="text" class="edit" v-model="todo.title" />
+          </li>
+        </ul>
+
         <footer class="footer">
-          <span class="todo-count">item left</span>
+          <span class="todo-count">{{ remaining }} item left</span>
           <ul class="filters">
             <li v-for="filter in filtersList" :key="filter.value">
               <a
@@ -31,48 +49,58 @@
               >
             </li>
           </ul>
-          <button class="clear-completed">Clear completed</button>
+          <button
+            class="clear-completed"
+            @click.prevent="clearCompleted"
+            v-show="todos.length > remaining"
+          >
+            Clear completed
+          </button>
         </footer>
       </section>
     </section>
-    <TodoFooter />
+    <footer class="info">
+      <p>Double-click to edit a todo</p>
+      <p>Written by <a href="https://dangthanh.org">Dang Van Thanh</a></p>
+      <p>Part of <a href="https://todomvc.com">TodoMVC</a></p>
+    </footer>
   </div>
 </template>
 
 <script>
 import { useTodo } from './composables/useTodo'
-import TodoList from './components/TodoList.vue'
-import TodoFooter from './components/TodoFooter.vue'
 
 export default {
   name: 'App',
-  components: {
-    TodoList,
-    TodoFooter,
-  },
   setup() {
     const {
       newTodo,
+      todos,
       editedTodo,
       visibility,
       filtersList,
       filteredTodos,
+      remaining,
       addTodo,
       editTodo,
       removeTodo,
       selectedFilter,
+      clearCompleted,
     } = useTodo()
 
     return {
       newTodo,
+      todos,
       editedTodo,
       visibility,
       filtersList,
       filteredTodos,
+      remaining,
       addTodo,
       editTodo,
       removeTodo,
       selectedFilter,
+      clearCompleted,
     }
   },
 }

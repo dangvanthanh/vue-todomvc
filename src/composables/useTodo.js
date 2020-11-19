@@ -11,7 +11,7 @@ export const useTodo = () => {
 
   const filters = {
     all: (todos) => todos,
-    active: (todos) => todos.filters((todo) => !todo.completed),
+    active: (todos) => todos.filter((todo) => !todo.completed),
     completed: (todos) => todos.filter((todo) => todo.completed),
   }
 
@@ -21,44 +21,53 @@ export const useTodo = () => {
     { value: 'completed', text: 'Completed' },
   ]
 
-  let newTodo = reactive('')
-  let editedTodo = reactive('')
+  let newTodo = ref('')
+  let editedTodo = reactive({ id: uuid(), title: '', completed: false })
   let todos = reactive([])
-  let visibility = reactive('all')
-  let filteredTodos = computed(() => filters[visibility](todos))
+  let visibility = ref('all')
+  let filteredTodos = computed(() => filters[visibility.value](todos))
+  let remaining = computed(() => filters['active'](todos).length)
 
   const addTodo = () => {
     todos.push({
       id: uuid(),
-      title: newTodo,
+      title: newTodo.value,
       completed: false,
     })
 
-    newTodo = ''
+    newTodo.value = ''
   }
 
   const editTodo = (todo) => {
-    state.editTodo = todo
+    editedTodo = todo
   }
 
-  const removeTodo = (todo) => {
-    const index = todos.indexOf(todo)
-    todos.splice(index, 1)
+  const removeTodo = (todoId) => {
+    const todoIndex = todos.findIndex((t) => t.id === todoId)
+    if (todoIndex < 0) return
+    todos.splice(todoIndex, 1)
   }
 
   const selectedFilter = (filter) => {
-    visibility = filter
+    visibility.value = filter
+  }
+
+  const clearCompleted = () => {
+    todos = filters['active'](todos)
   }
 
   return {
     newTodo,
     editedTodo,
+    todos,
     visibility,
     filtersList,
     filteredTodos,
+    remaining,
     addTodo,
     editTodo,
     removeTodo,
     selectedFilter,
+    clearCompleted,
   }
 }
