@@ -16,14 +16,19 @@
       <section class="main">
         <div>
           <input type="checkbox" class="toggle-all" id="toggle-all" />
-          <label for="toggle-all">Mark all as complete</label>
+          <label for="toggle-all" @click="toggleAll"
+            >Mark all as complete</label
+          >
         </div>
         <ul class="todo-list">
           <li
             class="todo"
             v-for="todo in filteredTodos"
             :key="todo.id"
-            :class="{ completed: todo.completed }"
+            :class="{
+              completed: todo.completed,
+              editing: todo.id === editedTodo.id,
+            }"
           >
             <div class="view">
               <input type="checkbox" class="toggle" v-model="todo.completed" />
@@ -33,12 +38,22 @@
                 @click.prevent="removeTodo(todo.id)"
               ></button>
             </div>
-            <input type="text" class="edit" v-model="todo.title" />
+            <input
+              type="text"
+              ref="newEditTodo"
+              class="edit"
+              v-model="todo.title"
+              @blur="doneEdit(todo)"
+              @keyup.enter="doneEdit(todo)"
+              @keyup.esc="cancelEdit(todo)"
+            />
           </li>
         </ul>
 
         <footer class="footer">
-          <span class="todo-count">{{ remaining }} item left</span>
+          <span class="todo-count" v-if="todos.length"
+            >{{ remaining }} item left</span
+          >
           <ul class="filters">
             <li v-for="filter in filtersList" :key="filter.value">
               <a
@@ -68,13 +83,16 @@
 </template>
 
 <script>
+import { watch } from 'vue'
 import { useTodo } from './composables/useTodo'
+import store from './store'
 
 export default {
   name: 'App',
   setup() {
-    const {
+    let {
       newTodo,
+      newEditTodo,
       todos,
       editedTodo,
       visibility,
@@ -84,12 +102,18 @@ export default {
       addTodo,
       editTodo,
       removeTodo,
+      doneEdit,
+      cancelEdit,
       selectedFilter,
       clearCompleted,
+      toggleAll,
     } = useTodo()
+
+     watch([todos], () => store.save(todos));
 
     return {
       newTodo,
+      newEditTodo,
       todos,
       editedTodo,
       visibility,
@@ -99,8 +123,11 @@ export default {
       addTodo,
       editTodo,
       removeTodo,
+      doneEdit,
+      cancelEdit,
       selectedFilter,
       clearCompleted,
+      toggleAll,
     }
   },
 }

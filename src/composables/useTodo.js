@@ -1,4 +1,5 @@
 import { ref, reactive, computed } from 'vue'
+import store from '../store'
 
 export const useTodo = () => {
   const uuid = () => {
@@ -22,13 +23,15 @@ export const useTodo = () => {
   ]
 
   let newTodo = ref('')
-  let editedTodo = reactive({ id: uuid(), title: '', completed: false })
-  let todos = reactive([])
+  let newEditTodo = ref(null)
+  let editedTodo = reactive({ id: '', title: '', completed: false })
+  let todos = reactive(store.fetch())
   let visibility = ref('all')
   let filteredTodos = computed(() => filters[visibility.value](todos))
   let remaining = computed(() => filters['active'](todos).length)
 
   const addTodo = () => {
+    if (!newTodo.value) return
     todos.push({
       id: uuid(),
       title: newTodo.value,
@@ -39,13 +42,33 @@ export const useTodo = () => {
   }
 
   const editTodo = (todo) => {
-    editedTodo = todo
+    editedTodo.id = todo.id
+    editedTodo.title = todo.title
+    editedTodo.completed = todo.completed
+    newEditTodo.value.focus()
   }
 
   const removeTodo = (todoId) => {
     const todoIndex = todos.findIndex((t) => t.id === todoId)
     if (todoIndex < 0) return
     todos.splice(todoIndex, 1)
+  }
+
+  const doneEdit = (todo) => {
+    editTodo.id = ''
+    editTodo.title = ''
+    editedTodo.completed = false
+    todo.title = todo.title.trim()
+
+    if (!todo.title) {
+      removeTodo(todo.id)
+    }
+  }
+
+  const cancelEdit = (todo) => {
+    editTodo.id = ''
+    editTodo.title = ''
+    editedTodo.completed = false
   }
 
   const selectedFilter = (filter) => {
@@ -56,8 +79,18 @@ export const useTodo = () => {
     todos = filters['active'](todos)
   }
 
+  const toggleAll = () => {
+    const isAll = todos.filter((todo) => todo.completed).length > 0
+
+    todos = todos.map((todo) => {
+      todo.completed = !isAll
+      return todo
+    })
+  }
+
   return {
     newTodo,
+    newEditTodo,
     editedTodo,
     todos,
     visibility,
@@ -67,7 +100,10 @@ export const useTodo = () => {
     addTodo,
     editTodo,
     removeTodo,
+    doneEdit,
+    cancelEdit,
     selectedFilter,
     clearCompleted,
+    toggleAll,
   }
 }
