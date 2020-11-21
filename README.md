@@ -5,7 +5,7 @@
 ## Getting Started
 
 ```shell
-$ npm i
+$ npm install
 $ npm run dev
 ```
 
