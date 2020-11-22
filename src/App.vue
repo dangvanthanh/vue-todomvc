@@ -40,9 +40,9 @@
             </div>
             <input
               type="text"
-              ref="newEditTodo"
               class="edit"
               v-model="todo.title"
+              v-focus
               @blur="doneEdit(todo)"
               @keyup.enter="doneEdit(todo)"
               @keyup.esc="cancelEdit(todo)"
@@ -92,7 +92,6 @@ export default {
   setup() {
     let {
       newTodo,
-      newEditTodo,
       todos,
       visibility,
       filtersList,
@@ -112,7 +111,6 @@ export default {
 
     return {
       newTodo,
-      newEditTodo,
       todos,
       visibility,
       filtersList,

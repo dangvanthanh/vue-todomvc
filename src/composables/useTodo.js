@@ -23,7 +23,6 @@ export const useTodo = () => {
   ]
 
   let newTodo = ref('')
-  let newEditTodo = ref(null)
   let todos = reactive(store.fetch())
   let visibility = ref('all')
   let filteredTodos = computed(() => filters[visibility.value](todos))
@@ -43,7 +42,6 @@ export const useTodo = () => {
 
   const editTodo = (todo) => {
     todo.editing = true
-    newEditTodo.value.focus()
   }
 
   const removeTodo = (todoId) => {
@@ -80,7 +78,6 @@ export const useTodo = () => {
 
   return {
     newTodo,
-    newEditTodo,
     todos,
     visibility,
     filtersList,
