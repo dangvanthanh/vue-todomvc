@@ -27,7 +27,7 @@
             :key="todo.id"
             :class="{
               completed: todo.completed,
-              editing: todo.id === editedTodo.id,
+              editing: todo.editing,
             }"
           >
             <div class="view">
@@ -94,7 +94,6 @@ export default {
       newTodo,
       newEditTodo,
       todos,
-      editedTodo,
       visibility,
       filtersList,
       filteredTodos,
@@ -109,13 +108,12 @@ export default {
       toggleAll,
     } = useTodo()
 
-     watch([todos], () => store.save(todos));
+    watch([todos], () => store.save(todos))
 
     return {
       newTodo,
       newEditTodo,
       todos,
-      editedTodo,
       visibility,
       filtersList,
       filteredTodos,

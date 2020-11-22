@@ -24,7 +24,6 @@ export const useTodo = () => {
 
   let newTodo = ref('')
   let newEditTodo = ref(null)
-  let editedTodo = reactive({ id: '', title: '', completed: false })
   let todos = reactive(store.fetch())
   let visibility = ref('all')
   let filteredTodos = computed(() => filters[visibility.value](todos))
@@ -36,15 +35,14 @@ export const useTodo = () => {
       id: uuid(),
       title: newTodo.value,
       completed: false,
+      editing: false,
     })
 
     newTodo.value = ''
   }
 
   const editTodo = (todo) => {
-    editedTodo.id = todo.id
-    editedTodo.title = todo.title
-    editedTodo.completed = todo.completed
+    todo.editing = true
     newEditTodo.value.focus()
   }
 
@@ -55,9 +53,7 @@ export const useTodo = () => {
   }
 
   const doneEdit = (todo) => {
-    editTodo.id = ''
-    editTodo.title = ''
-    editedTodo.completed = false
+    todo.editing = false
     todo.title = todo.title.trim()
 
     if (!todo.title) {
@@ -65,22 +61,16 @@ export const useTodo = () => {
     }
   }
 
-  const cancelEdit = (todo) => {
-    editTodo.id = ''
-    editTodo.title = ''
-    editedTodo.completed = false
-  }
+  const cancelEdit = (todo) => (todo.editing = false)
 
-  const selectedFilter = (filter) => {
-    visibility.value = filter
-  }
+  const selectedFilter = (filter) => (visibility.value = filter)
 
   const clearCompleted = () => {
     todos = filters['active'](todos)
   }
 
   const toggleAll = () => {
-    const isAll = todos.filter((todo) => todo.completed).length > 0
+    const isAll = todos.filter((todo) => todo.completed).length
 
     todos = todos.map((todo) => {
       todo.completed = !isAll
@@ -91,7 +81,6 @@ export const useTodo = () => {
   return {
     newTodo,
     newEditTodo,
-    editedTodo,
     todos,
     visibility,
     filtersList,
