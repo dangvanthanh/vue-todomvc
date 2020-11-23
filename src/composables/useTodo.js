@@ -1,4 +1,4 @@
-import { ref, reactive, computed } from 'vue'
+import { ref, reactive, watch, computed } from 'vue'
 import store from '../store'
 
 export const useTodo = () => {
@@ -11,9 +11,9 @@ export const useTodo = () => {
   }
 
   const filters = {
-    all: (todos) => todos,
-    active: (todos) => todos.filter((todo) => !todo.completed),
-    completed: (todos) => todos.filter((todo) => todo.completed),
+    all: (todos) => todos.value,
+    active: (todos) => todos.value.filter((todo) => !todo.completed),
+    completed: (todos) => todos.value.filter((todo) => todo.completed),
   }
 
   const filtersList = [
@@ -23,14 +23,16 @@ export const useTodo = () => {
   ]
 
   let newTodo = ref('')
-  let todos = reactive(store.fetch())
+  let todos = ref(store.fetch())
   let visibility = ref('all')
   let filteredTodos = computed(() => filters[visibility.value](todos))
   let remaining = computed(() => filters['active'](todos).length)
 
+  watch(todos, (newTodos) => store.save(newTodos))
+
   const addTodo = () => {
     if (!newTodo.value) return
-    todos.push({
+    todos.value.push({
       id: uuid(),
       title: newTodo.value,
       completed: false,
@@ -45,9 +47,9 @@ export const useTodo = () => {
   }
 
   const removeTodo = (todoId) => {
-    const todoIndex = todos.findIndex((t) => t.id === todoId)
+    const todoIndex = todos.value.findIndex((t) => t.id === todoId)
     if (todoIndex < 0) return
-    todos.splice(todoIndex, 1)
+    todos.value.splice(todoIndex, 1)
   }
 
   const doneEdit = (todo) => {
@@ -64,13 +66,12 @@ export const useTodo = () => {
   const selectedFilter = (filter) => (visibility.value = filter)
 
   const clearCompleted = () => {
-    todos = filters['active'](todos)
+    todos.value = filters['active'](todos)
   }
 
   const toggleAll = () => {
-    const isAll = todos.filter((todo) => todo.completed).length
-
-    todos = todos.map((todo) => {
+    const isAll = todos.value.filter((todo) => todo.completed).length
+    todos.value = todos.value.map((todo) => {
       todo.completed = !isAll
       return todo
     })

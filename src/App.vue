@@ -57,7 +57,7 @@
           <ul class="filters">
             <li v-for="filter in filtersList" :key="filter.value">
               <a
-                href="#"
+                :href="`#${filter.value}`"
                 :class="{ selected: visibility === filter.value }"
                 @click.prevent="selectedFilter(filter.value)"
                 >{{ filter.text }}</a
@@ -85,7 +85,6 @@
 <script>
 import { watch } from 'vue'
 import { useTodo } from './composables/useTodo'
-import store from './store'
 
 export default {
   name: 'App',
@@ -106,8 +105,6 @@ export default {
       clearCompleted,
       toggleAll,
     } = useTodo()
-
-    watch([todos], () => store.save(todos))
 
     return {
       newTodo,
