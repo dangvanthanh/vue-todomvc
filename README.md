@@ -2,6 +2,8 @@
 
 > TodoMVC using Vue 3
 
+![](screenshot.png)
+
 ## Getting Started
 
 ```shell
@@ -11,4 +13,4 @@ $ npm run dev
 
 ## License
 
-MIT © [Dang Van Thanh](http://dangthanh.org)
+MIT © [Dang Van Thanh](https://dangthanh.org)

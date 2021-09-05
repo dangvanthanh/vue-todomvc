@@ -10,13 +10,10 @@
     "vue": "^3.0.2"
   },
   "devDependencies": {
-    "vite": "^1.0.0-rc.8",
-    "@vue/compiler-sfc": "^3.0.2"
+    "@dangvanthanh/prettier-config": "^1.0.0",
+    "@vitejs/plugin-vue": "^1.6.0",
+    "@vue/compiler-sfc": "^3.0.2",
+    "vite": "2.5.3"
   },
-  "prettier": {
-    "printWidth": 80,
-    "trailingComma": "es5",
-    "semi": false,
-    "singleQuote": true
-  }
+  "prettier": "@dangvanthanh/prettier-config"
 }

@@ -16,9 +16,7 @@
       <section class="main">
         <div>
           <input type="checkbox" class="toggle-all" id="toggle-all" />
-          <label for="toggle-all" @click="toggleAll"
-            >Mark all as complete</label
-          >
+          <label for="toggle-all" @click="toggleAll">Mark all as complete</label>
         </div>
         <ul class="todo-list">
           <li
@@ -33,10 +31,7 @@
             <div class="view">
               <input type="checkbox" class="toggle" v-model="todo.completed" />
               <label @dblclick="editTodo(todo)">{{ todo.title }}</label>
-              <button
-                class="destroy"
-                @click.prevent="removeTodo(todo.id)"
-              ></button>
+              <button class="destroy" @click.prevent="removeTodo(todo.id)"></button>
             </div>
             <input
               type="text"
@@ -51,9 +46,7 @@
         </ul>
 
         <footer class="footer">
-          <span class="todo-count" v-if="todos.length"
-            >{{ remaining }} item left</span
-          >
+          <span class="todo-count" v-if="todos.length">{{ remaining }} item left</span>
           <ul class="filters">
             <li v-for="filter in filtersList" :key="filter.value">
               <a
@@ -64,11 +57,7 @@
               >
             </li>
           </ul>
-          <button
-            class="clear-completed"
-            @click.prevent="clearCompleted"
-            v-show="todos.length > remaining"
-          >
+          <button class="clear-completed" @click.prevent="clearCompleted" v-show="todos.length > remaining">
             Clear completed
           </button>
         </footer>
@@ -82,46 +71,23 @@
   </div>
 </template>
 
-<script>
-import { watch } from 'vue'
+<script setup>
 import { useTodo } from './composables/useTodo'
 
-export default {
-  name: 'App',
-  setup() {
-    let {
-      newTodo,
-      todos,
-      visibility,
-      filtersList,
-      filteredTodos,
-      remaining,
-      addTodo,
-      editTodo,
-      removeTodo,
-      doneEdit,
-      cancelEdit,
-      selectedFilter,
-      clearCompleted,
-      toggleAll,
-    } = useTodo()
-
-    return {
-      newTodo,
-      todos,
-      visibility,
-      filtersList,
-      filteredTodos,
-      remaining,
-      addTodo,
-      editTodo,
-      removeTodo,
-      doneEdit,
-      cancelEdit,
-      selectedFilter,
-      clearCompleted,
-      toggleAll,
-    }
-  },
-}
+const {
+  newTodo,
+  todos,
+  visibility,
+  filtersList,
+  filteredTodos,
+  remaining,
+  addTodo,
+  editTodo,
+  removeTodo,
+  doneEdit,
+  cancelEdit,
+  selectedFilter,
+  clearCompleted,
+  toggleAll,
+} = useTodo()
 </script>

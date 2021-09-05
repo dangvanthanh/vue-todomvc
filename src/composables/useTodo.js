@@ -1,4 +1,4 @@
-import { ref, reactive, watch, computed } from 'vue'
+import { ref, watch, computed } from 'vue'
 import store from '../store'
 
 export const useTodo = () => {
@@ -22,16 +22,23 @@ export const useTodo = () => {
     { value: 'completed', text: 'Completed' },
   ]
 
-  let newTodo = ref('')
-  let todos = ref(store.fetch())
-  let visibility = ref('all')
-  let filteredTodos = computed(() => filters[visibility.value](todos))
-  let remaining = computed(() => filters['active'](todos).length)
+  const newTodo = ref('')
+  const todos = ref(store.fetch())
+  const visibility = ref('all')
+  const filteredTodos = computed(() => filters[visibility.value](todos))
+  const remaining = computed(() => filters['active'](todos).length)
 
-  watch(todos, (newTodos) => store.save(newTodos))
+  watch(
+    () => [...todos.value],
+    (newTodos) => {
+      store.save(newTodos)
+    },
+  )
 
   const addTodo = () => {
-    if (!newTodo.value) return
+    if (!newTodo.value) {
+      return
+    }
     todos.value.push({
       id: uuid(),
       title: newTodo.value,
