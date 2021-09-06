@@ -29,7 +29,7 @@
             }"
           >
             <div class="view">
-              <input type="checkbox" class="toggle" v-model="todo.completed" />
+              <input type="checkbox" class="toggle" v-model="todo.completed" @click="toggleTodo(todo)" />
               <label @dblclick="editTodo(todo)">{{ todo.title }}</label>
               <button class="destroy" @click.prevent="removeTodo(todo.id)"></button>
             </div>
@@ -89,5 +89,6 @@ const {
   selectedFilter,
   clearCompleted,
   toggleAll,
+  toggleTodo
 } = useTodo()
 </script>

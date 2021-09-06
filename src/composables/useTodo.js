@@ -84,6 +84,16 @@ export const useTodo = () => {
     })
   }
 
+  const toggleTodo = (todo) => {
+    todos.value = todos.value.map((t) => {
+      if (t.id === todo.id) {
+        t.completed = !todo.completed
+      }
+
+      return t
+    })
+  }
+
   return {
     newTodo,
     todos,
@@ -99,5 +109,6 @@ export const useTodo = () => {
     selectedFilter,
     clearCompleted,
     toggleAll,
+    toggleTodo,
   }
 }
